@@ -1,4 +1,5 @@
 spring:
+  #redis 的配置
   redis:
     host: local.redis.com
     port: 6379
@@ -10,6 +11,7 @@ spring:
         max-idle: 8
         max-active: 8
         max-wait: -1ms
+  #数据源的配置
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://local.mysql.com:3306/cloud_oauth?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
@@ -33,21 +35,30 @@ spring:
     enabled: true
     sender:
       type: web
+
+#token生成方式的配置
 access_token:
   store-jwt: false
   jwt-signing-key: xiao@wei@jia@gou=$==+_+%0%:)(:)
   add-userinfo: false
+
+#日志的配置
 logging:
   level:
     root: info
     com.cloud: debug
   file: logs/${spring.application.name}.log
-ribbon: #项目启动后，认证中心需要去注册中心找到用户中心的ip和端口号
+
+#项目启动后，认证中心需要去注册中心找到用户中心的ip和端口号
+#如果没有配置的话，启动是不会，只是第一次使用的时候才去获取用户中心的ip和端口号
+ribbon:
   eager-load:
     enabled: true
     clients: user-center
   ReadTimeout: 10000
   ConnectTimeout: 10000
+
+#超时的配置
 hystrix:
   command:
     default:

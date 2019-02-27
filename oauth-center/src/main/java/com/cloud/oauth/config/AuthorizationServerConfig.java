@@ -36,7 +36,7 @@ import java.util.Map;
  * @author 小威老师 xiaoweijiagou@163.com
  */
 @Configuration
-@EnableAuthorizationServer
+@EnableAuthorizationServer //表明这是一个授权服务器
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     /**
@@ -70,9 +70,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Bean
     public TokenStore tokenStore() {
+        //token使用jwt方式进行存储
         if (storeWithJwt) {
             return new JwtTokenStore(accessTokenConverter());
         }
+        //token使用共享数据的存储
         RedisTokenStore redisTokenStore = new RedisTokenStore(redisConnectionFactory);
         // 2018.08.04添加,解决同一username每次登陆access_token都相同的问题
         redisTokenStore.setAuthenticationKeyGenerator(new RandomAuthenticationKeyGenerator());
@@ -82,11 +84,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+       //配置认证管理器
         endpoints.authenticationManager(this.authenticationManager);
+        //token使用哪种存储方式
         endpoints.tokenStore(tokenStore());
         // 授权码模式下，code存储
 //		endpoints.authorizationCodeServices(new JdbcAuthorizationCodeServices(dataSource));
         endpoints.authorizationCodeServices(redisAuthorizationCodeServices);
+        //如果是jwt的话，添加一个转换器
         if (storeWithJwt) {
             endpoints.accessTokenConverter(accessTokenConverter());
         } else {
@@ -114,7 +119,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         if (accessToken instanceof DefaultOAuth2AccessToken) {
             DefaultOAuth2AccessToken defaultOAuth2AccessToken = (DefaultOAuth2AccessToken) accessToken;
 
+            //拿到用户的登录凭证
             Authentication userAuthentication = authentication.getUserAuthentication();
+            //拿到当前登录用户
             Object principal = userAuthentication.getPrincipal();
             if (principal instanceof LoginAppUser) {
                 LoginAppUser loginUser = (LoginAppUser) principal;
@@ -138,6 +145,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     /**
      * 我们将client信息存储到oauth_client_details表里<br>
      * 并将数据缓存到redis
+     * 用户登录的时候产生的信息：
+     * client_id
+     * client_secret
+     * scope
+     * access_token_balidity   token的有效期
+     * refresh_token_
      *
      * @param clients
      * @throws Exception
