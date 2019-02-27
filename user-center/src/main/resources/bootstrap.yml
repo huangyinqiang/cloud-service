@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: user-center
+    #下面这个是从配置中心拉去配置，使用dev
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        serviceId: config-center
+      profile: dev
+      fail-fast: true
+server:
+  port: 0 #实现高可用
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://root:123456@local.register.com:8761/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.int}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always

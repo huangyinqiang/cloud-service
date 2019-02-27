@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: config-center
+  #下面是配置中心主要的
+  profiles:
+    active: native #native对应的是下面server.native
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: classpath:/configs/{profile} #{profile}是通配符,还有application,label
+#          searchLocations: file:/d:/configs/{profile}
+        git:
+          uri: https://gitee.com/zhang.w/cloud-service-configs.git
+          default-label: master
+          force-pull: true
+          searchPaths: '{profile}'
+server:
+  port: 0 #随机端口，因为需要实现高可用，可能有多个端口
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://root:123456@local.register.com:8761/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    lease-expiration-duration-in-seconds: 15
+    lease-renewal-interval-in-seconds: 5
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.int} #用随机数值代表随机端口
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  #表示包含所有端点的信息，默认只是打开了info,health端点
+  endpoint:
+    health:
+      show-details: always  #总是表示详细信息的显示
+logging:
+  level:
+    root: info
+  file: logs/${spring.application.name}.log
