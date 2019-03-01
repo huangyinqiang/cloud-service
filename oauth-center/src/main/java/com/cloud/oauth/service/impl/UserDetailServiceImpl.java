@@ -38,6 +38,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private SmsClient smsClient;
 
     @Override
+    //登录用户在这里进行查询，但是密码校验在底层 SecurityConfig configure(AuthenticationManagerBuilder auth)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 为了支持多类型登录，这里username后面拼装上登录类型,如username|type
         String[] params = username.split("\\|");
