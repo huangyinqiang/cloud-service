@@ -96,7 +96,7 @@ public class ClientController {
      * 根据id获取client信息
      *
      * @param clientId
-     * @param check    是否校验存在性
+     * @param check SystemClientInfo   是否校验存在性
      * @return
      */
     private ClientDetails getAndCheckClient(String clientId, boolean check) {

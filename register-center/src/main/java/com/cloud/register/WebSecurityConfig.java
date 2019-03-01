@@ -24,7 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 //要求所有进入应用的HTTP请求都要进行认证
                 .anyRequest().authenticated()
-                //HTTPBasic方式的认证
+                //的认证
                 .and().httpBasic();
     }
 }

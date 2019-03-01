@@ -10,7 +10,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://root:123456@local.register.com:${server.port}/eureka/ #,http://local.register.com:${server.port}/eureka/
+      defaultZone: http://root:123456@127.0.0.1:${server.port}/eureka/ #,http://local.register.com:${server.port}/eureka/
     register-with-eureka: true #自己把自己注册到注册中心
     fetch-registry: false
     registry-fetch-interval-seconds: 5
